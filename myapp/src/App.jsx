@@ -4,10 +4,14 @@ import Dashboard from "./pages/Dashbaoard"
 import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
 import About from "./pages/About"
+import Header from "./components/Header"
 const App = () => {
   return (
     // config routes with react router
     <BrowserRouter>
+
+    {/* add header component for all pages */}
+    <Header/>
     
     <Routes>
 
