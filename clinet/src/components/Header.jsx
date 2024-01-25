@@ -39,7 +39,7 @@ const Header = () => {
 
             {/* btns (sing in , sign up ,darkmode ,..) */}
             <div className=' flex gap-2 md:order-2'>
-                <Button className=' w-12 h-10 hidden md:inline' color='gray' pill>
+                <Button className=' w-12 h-10 hidden md:inline' color='gray'>
                     <FaMoon/>
                 </Button>
             <Link to='/sign-in'>
