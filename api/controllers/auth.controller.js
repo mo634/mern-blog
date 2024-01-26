@@ -1,7 +1,8 @@
 
 import User from '../models/user.model.js'
 import bcryptjs from 'bcryptjs'
-export const SingUp=async  (req,res) => {
+import { errorHandler } from '../utlis/errorHandler.js'
+export const SingUp=async  (req,res,next) => {
     // get data from body 
     const {username,email,password} = req.body
 
@@ -9,7 +10,10 @@ export const SingUp=async  (req,res) => {
     // validate data 
 
     if(!username || !email || !password || username==="" || email==="" || password===""){
-        return res.status(400).json({message:"Please add all fields"})
+        
+        // send error to middleware 
+
+        return next(errorHandler({message:"all fields required",statusCode:400}))
     }
 
     //hash the password 
@@ -36,7 +40,8 @@ export const SingUp=async  (req,res) => {
     } 
     
     catch (error) {
-        res.status(500).json({message:"duplicate inputs",error})
+        // send error to middleware
+        next(error)
     }
 
 }
