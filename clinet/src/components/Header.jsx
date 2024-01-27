@@ -11,7 +11,7 @@ const Header = () => {
             {/* logo */}
 
             <Link to="/" className='self-center whitespace-nowrap txt-media'>
-                <span className='txt-media bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white py-1 px-2 mr-1'>mohamed's</span>
+                <span className='txt-media main-gradient rounded-lg text-white py-1 px-2 mr-1'>mohamed's</span>
                 <span className='txt-media sm:text-xl'>blog</span>
             </Link>
 
