@@ -5,6 +5,7 @@ import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
 import About from "./pages/About"
 import Header from "./components/Header"
+import FooterComp from "./components/FooterComp"
 const App = () => {
   return (
     // config routes with react router
@@ -12,6 +13,8 @@ const App = () => {
 
     {/* add header component for all pages */}
     <Header/>
+    
+
     
     <Routes>
 
@@ -23,6 +26,10 @@ const App = () => {
     <Route path="/about" element = {<About/>}/>
 
     </Routes>
+
+    {/* add footer component */}
+
+      <FooterComp/>
     
     </BrowserRouter>
   )

@@ -2,6 +2,7 @@ import { Avatar, Button, Dropdown, Navbar, NavbarToggle, TextInput } from 'flowb
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
+import Logo from './Logo';
 
 const Header = () => {
     //states 
@@ -10,10 +11,7 @@ const Header = () => {
         <Navbar className='border-b-2'>
             {/* logo */}
 
-            <Link to="/" className='self-center whitespace-nowrap txt-media'>
-                <span className='txt-media main-gradient rounded-lg text-white py-1 px-2 mr-1'>mohamed's</span>
-                <span className='txt-media sm:text-xl'>blog</span>
-            </Link>
+                <Logo className=""/>
 
             {/* search */}
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
+import Logo from '../components/Logo'
 const SignUp = () => {
   // states
 
@@ -69,10 +70,8 @@ const SignUp = () => {
 
         <div className='flex-1'>
 
-          <div className="">
-            <span className=' mr-1 main-gradient rounded-md p-2 text-white '>Mohamed's</span>
-            <span className='font-bold'>Blog</span>
-          </div>
+          {/* logo */}
+          <Logo/>
 
           <p className='txt-media mt-3 text-gray-500'>
             This is a demo project. You can sign up with your email and password or with Google.</p>
@@ -98,7 +97,7 @@ const SignUp = () => {
 
             <div >
               <Label value="your password" />
-              <TextInput id='password' type="text" placeholder="Enter your password" onChange={habdleChange}  />
+              <TextInput id='password' type="password" placeholder="Enter your password" onChange={habdleChange}  />
             </div>
 
             <div className='mt-2 flex gap-2 flex-col'>
