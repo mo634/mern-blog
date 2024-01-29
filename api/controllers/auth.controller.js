@@ -13,8 +13,7 @@ export const singUp=async  (req,res,next) => {
     if(!username || !email || !password || username==="" || email==="" || password===""){
         
         // send error to middleware 
-
-        return next(errorHandler({message:"all fields required",statusCode:400}))
+        return next(errorHandler(400,"all fields required"))
     }
 
     //hash the password 
@@ -63,7 +62,8 @@ export const singIn=async (req,res,next) => {
     const validUser =await User.findOne({email})
 
     if(!validUser){
-        return next(errorHandler(401,"invalid email"))
+        console.log("first")
+        return next(errorHandler(404,"invalid email"))
     }
 
     // compare password
