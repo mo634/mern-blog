@@ -68,7 +68,7 @@ const SignUp = () => {
       <div className='md:flex-row flex-col max-w-3xl  h-fit flex gap-1 mx-auto'>
         {/* left side */}
 
-        <div className='flex-1'>
+        <div className='flex justify-center flex-col flex-1'>
 
           {/* logo */}
           <Logo/>
@@ -83,7 +83,7 @@ const SignUp = () => {
 
         <div className="flex-1">
           
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
             <div className="">
               <Label value="your username" />
