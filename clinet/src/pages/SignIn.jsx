@@ -2,16 +2,18 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import Logo from '../components/Logo'
+import { useDispatch, useSelector } from 'react-redux' 
+import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
 const SignIn = () => {
   // states
 
   const [FormData,setFormDate] = useState({})
 
-  const [error ,setError] = useState(null)
-
-  const [loading ,setLoading ] = useState(false)
-
   const navigate= useNavigate()
+
+  const dispatch = useDispatch()
+
+  const {loading,error,currentUser} = useSelector(state=>state.user)
 
   //functions
 
@@ -20,8 +22,8 @@ const SignIn = () => {
     e.preventDefault() 
 
     try {
-      setError(null)
-      setLoading(true)
+
+      dispatch(signInStart())
 
       const res = await fetch("/api/auth/sign-in",{
         method:"POST",
@@ -36,13 +38,12 @@ const SignIn = () => {
   
       // if data failed
       if(data.success == false){
-        setLoading(false)
-        setError(data.message)
+        dispatch(signInFailure(data.message))
       }
 
       //if data success
 
-      setLoading(false)
+      dispatch(signInSuccess(data.user))
 
       // redirect
       if(res.ok){
@@ -51,8 +52,7 @@ const SignIn = () => {
 
 
     } catch (error) {
-      setError(error.message)
-        setLoading(false)
+      dispatch(signInFailure(error.message))
     }
     
   }
