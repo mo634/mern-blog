@@ -1,21 +1,26 @@
-import { Avatar, Button, Dropdown, Navbar, NavbarToggle, TextInput } from 'flowbite-react';
+import { Avatar, Button, Dropdown, DropdownItem, Navbar, NavbarToggle, TextInput } from 'flowbite-react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Logo from './Logo';
 
 const Header = () => {
     //states 
     const path = useLocation().pathname
+
+    const { currentUser } = useSelector(state => state.user)
+
+    console.log(currentUser)
     return (
         <Navbar className='border-b-2'>
             {/* logo */}
 
-                <Logo className=""/>
+            <Logo className="" />
 
             {/* search */}
 
-                {/* lg media */}
+            {/* lg media */}
 
             <form className="relative hidden md:inline">
                 <TextInput
@@ -32,22 +37,55 @@ const Header = () => {
                 <AiOutlineSearch />
             </Button>
 
-            
+
 
 
             {/* btns (sing in , sign up ,darkmode ,..) */}
             <div className=' flex gap-2 md:order-2'>
                 <Button className=' w-12 h-10 hidden md:inline' color='gray'>
-                    <FaMoon/>
+                    <FaMoon />
                 </Button>
-            <Link to='/sign-in'>
-                <Button gradientDuoTone='purpleToBlue' outline>
-                    Sign in
-                </Button>
-            </Link>
+
+                {/* render signin or dropdown */}
+                {
+                    currentUser ?
+
+                        (
+                            <Dropdown
+                            arrowIcon={false}
+                            inline 
+                            label={<Avatar alt="User settings" img={currentUser.googlePhotoUrl} rounded/>}
+                            >
+
+                                <Dropdown.Header>
+
+                                    <Link to={'/dashboard?tab=profile'}>
+                                    <DropdownItem>profile</DropdownItem>
+                                    </Link>
+
+                                    <DropdownItem>Sign out</DropdownItem>
+
+                                </Dropdown.Header>
+
+                            </Dropdown>
+                        )
+
+                        :
+
+                        (
+                            <Link to='/sign-in'>
+                                <Button gradientDuoTone='purpleToBlue' outline>
+                                    Sign in
+                                </Button>
+                            </Link>
+                        )
+
+
+                }
+
             </div>
 
-            <NavbarToggle/>
+            <NavbarToggle />
             {/* links */}
 
             <Navbar.Collapse>
