@@ -6,6 +6,7 @@ import SignUp from "./pages/SignUp"
 import About from "./pages/About"
 import Header from "./components/Header"
 import FooterComp from "./components/FooterComp"
+import PrivateRoute from "./components/PrivateRoute"
 const App = () => {
   return (
     // config routes with react router
@@ -20,7 +21,13 @@ const App = () => {
 
     <Route path="/" element = {<Home/>}/>
 
-    <Route path="/dashboard" element = {<Dashboard/>}/>
+    {/* make dashboard private */}
+    
+    <Route element = {<PrivateRoute/>}>
+      <Route path="/dashboard" element = {<Dashboard/>}/>
+    </Route>
+
+
     <Route path="/sign-in" element = {<SignIn/>}/>
     <Route path="/sign-up" element = {<SignUp/>}/>
     <Route path="/about" element = {<About/>}/>
