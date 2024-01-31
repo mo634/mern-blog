@@ -4,6 +4,7 @@ import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import Logo from '../components/Logo'
 import { useDispatch, useSelector } from 'react-redux' 
 import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
+import OAuth from '../components/OAuth'
 const SignIn = () => {
   // states
 
@@ -108,17 +109,13 @@ const SignIn = () => {
 
               </Button>
 
-            <Button  gradientDuoTone='purpleToPink'
-              type='submit' className='w-full' outline >
-                
-                Continue with google
+              <OAuth/>
 
-              </Button>
             </div>
 
             <div className="">
               <p className='txt-media mt-3 text-gray-500'>Don't have an account ? 
-              <Link className=' text-[#0079ff]'>Sign Up</Link>
+              <Link className=' text-[#0079ff]' to={"/sign-up"}>Sign Up</Link>
               </p>
             </div>
 

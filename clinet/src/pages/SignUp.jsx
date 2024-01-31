@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import Logo from '../components/Logo'
+import OAuth from '../components/OAuth'
 const SignUp = () => {
   // states
 
@@ -113,17 +114,13 @@ const SignUp = () => {
 
               </Button>
 
-            <Button  gradientDuoTone='purpleToPink'
-              type='submit' className='w-full' outline >
-                
-                Continue with google
+              <OAuth/>
 
-              </Button>
             </div>
 
             <div className="">
               <p className='txt-media mt-3 text-gray-500'>Already have an account? 
-              <Link className=' text-[#0079ff]'>Sign In</Link>
+              <Link className=' text-[#0079ff]' to={"/sign-in"}>Sign In</Link>
               </p>
             </div>
 

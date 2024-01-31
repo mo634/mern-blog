@@ -1,88 +1,148 @@
+import User from "../models/user.model.js";
+import bcryptjs from "bcryptjs";
+import { errorHandler } from "../utlis/errorHandler.js";
+import jwt from "jsonwebtoken";
+export const singUp = async (req, res, next) => {
+    // get data from body
+    const { username, email, password } = req.body;
 
-import User from '../models/user.model.js'
-import bcryptjs from 'bcryptjs'
-import { errorHandler } from '../utlis/errorHandler.js'
-import jwt from 'jsonwebtoken'
-export const singUp=async  (req,res,next) => {
-    // get data from body 
-    const {username,email,password} = req.body
+    // validate data
 
-
-    // validate data 
-
-    if(!username || !email || !password || username==="" || email==="" || password===""){
-        
-        // send error to middleware 
-        return next(errorHandler(400,"all fields required"))
+    if (
+        !username ||
+        !email ||
+        !password ||
+        username === "" ||
+        email === "" ||
+        password === ""
+    ) {
+        // send error to middleware
+        return next(errorHandler(400, "all fields required"));
     }
 
-    //hash the password 
+    //hash the password
 
-    const hashedPassword = await bcryptjs.hashSync(password,10)
-    
-    // create new user 
+    const hashedPassword = await bcryptjs.hashSync(password, 10);
 
-    const newUser =new User( {
+    // create new user
+
+    const newUser = new User({
         username,
         email,
-        password:hashedPassword
-    }
-    )
-    
+        password: hashedPassword,
+    });
+
     try {
         // save user
-    
-        await newUser.save()
-        
+
+        await newUser.save();
+
         // send response
-    
-        res.status(201).json({message:"User created",newUser})
-    } 
-    
-    catch (error) {
+
+        res.status(201).json({ message: "User created", newUser });
+    } catch (error) {
         // send error to middleware
-        next(error)
+        next(error);
     }
+};
 
-}
-
-
-export const singIn=async (req,res,next) => { 
-    
+export const singIn = async (req, res, next) => {
     // get data from body
-    const {email , password} = req.body 
+    const { email, password } = req.body;
 
     try {
         // validate data
-    if(!email || !password || email==="" || password===""){
-        return next(errorHandler(400,"all field required"))
+        if (!email || !password || email === "" || password === "") {
+            return next(errorHandler(400, "all field required"));
+        }
+
+        // find user
+        const validUser = await User.findOne({ email });
+
+        if (!validUser) {
+            console.log("first");
+            return next(errorHandler(404, "invalid email"));
+        }
+
+        // compare password
+        const validPassword = bcryptjs.compareSync(password, validUser.password);
+
+        if (!validPassword) {
+            return next(errorHandler(401, "invalid password"));
+        }
+
+        //hash the tokent
+        const token = jwt.sign({ id: validUser._id }, process.env.SECRET_KEY);
+
+        const { password: pass, ...rest } = validUser._doc;
+        // store credentials in cookie & sent response
+        res
+            .status(200)
+            .cookie("access_token", token, { httpOnly: true })
+            .json({ message: "login success", user: rest });
+    } catch (error) {
+        next(error);
     }
+};
 
-    // find user
-    const validUser =await User.findOne({email})
+export const google = async (req, res, next) => {
+    // get user data
 
-    if(!validUser){
-        console.log("first")
-        return next(errorHandler(404,"invalid email"))
-    }
+    const { name, email, googlePhotoUrl } = req.body;
 
-    // compare password
-    const validPassword = bcryptjs.compareSync(password,validUser.password)
+    console.log(name)
 
-    if(!validPassword){
-        return next(errorHandler(401,"invalid password"))
-    }
+    try {
+        const user = await User.findOne({ email });
 
-    //hash the tokent  
-    const token = jwt.sign({id:validUser._id},process.env.SECRET_KEY)
+        // if user exist =>  singn in (hashing with jwt the doc id then store in cookie)
+        if (user) {
+            const token = jwt.sign(
+                {
+                    id: user._id,
+                },
+                process.env.SECRET_KEY
+            );
 
-    const {password:pass , ...rest} = validUser._doc
-    // store credentials in cookie & sent response 
-    res.status(200).cookie("access_token",token,{httpOnly:true}).json({message:"login success"
-    ,"user":rest
-})
+            const { password: pass, ...rest } = user._doc;
 
+            //storer token in cookie
+            res
+                .status(200)
+                .cookie("access_token", token, { httpOnly: true })
+                .json(rest);
+        } else {
+            //create and hash the password
+            const generatePassword = Math.random().toString(36).slice(-8);
+
+            const hashPassword = bcryptjs.hashSync(generatePassword, 10);
+
+            // create new user
+            const newUser = await User({
+                // to make user name is unique
+                username: name.toLowerCase().split(" ").join("") + Math.random().toString(9).slice(-4),
+
+                email,
+                password: hashPassword,
+                googlePhotoUrl,
+            });
+
+            // save changes
+            await newUser.save();
+
+            //send response
+
+            const token = jwt.sign(
+                {
+                    id: newUser._id,
+                }
+            , process.env.SECRET_KEY)
+
+            const { password: pass, ...rest } = newUser._doc;
+
+            res.status(200).cookie("access_token",token,{httpOnly:true}).json(rest)
+        }
     } catch (error) {
         next(error)
     }
-}
+};
