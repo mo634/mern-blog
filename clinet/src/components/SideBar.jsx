@@ -32,6 +32,7 @@ return (
                 icon={HiUser}
                 active = {tab==="profile"} 
                 className='cursor-pointer'
+                as="div"
                 >
                     profile
                 </Sidebar.Item>
