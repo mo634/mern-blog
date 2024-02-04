@@ -41,15 +41,18 @@ export const updateUsre = async (req, res, next) => {
                 $set: {
                     username: req.body.username,
                     email: req.body.email,
-                    profilePicture: req.body.profilePicture,
+                    googlePhotoUrl: req.body.googlePhotoUrl,
                     password: req.body.password,
                 }
-            }
+            },
+            {new:true}
         )
 
         const { password: pass, ...rest } = updateUser._doc
 
-        res.status(200).json({ message: "user updated", rest })
+        console.log(updateUser)
+
+        res.status(200).json({ message: "user updated", user:rest })
     } catch (error) {
         next(errorHandler(error.statusCode, error.message))
     }

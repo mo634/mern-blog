@@ -1,6 +1,6 @@
-import { Alert, Button, TextInput } from 'flowbite-react'
+import { Alert, Button, Spinner, TextInput } from 'flowbite-react'
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
     getDownloadURL,
     getStorage,
@@ -10,11 +10,15 @@ import {
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { updateFailure, updateStart, updateSuccess } from '../redux/user/userSlice';
 
 
 const ProfileDashboard = () => {
     //states
-    const { currentUser } = useSelector((state) => state.user)
+
+    const dispatch = useDispatch()
+
+    const { currentUser, loading,error } = useSelector((state) => state.user)
 
     const [imageFile, setImageFile] = useState(null)
 
@@ -24,9 +28,64 @@ const ProfileDashboard = () => {
 
     const [imageFileError, setImageFileError] = useState(null)
 
+    const [formData, setFormData] = useState({})
+
+    const [updateUserError, setUpdateUserError] = useState(null)
+
+    const [udpateSuccess, setUdpateSuccess] = useState(null)
+
     const imageRef = useRef(null)
 
     // funcs
+
+    const handleInputChange = (e) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value })
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        setUpdateUserError(null)
+        setUdpateSuccess(null)
+
+        // if form data is empty not submit 
+
+        if (Object.keys(formData).length === 0) {
+            setUpdateUserError("nothing changed ")
+            return
+        }
+
+        try {
+            dispatch(updateStart())
+
+            const res = await fetch(`/api/user/user-update/${currentUser._id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            })
+
+            const data = await res.json()
+
+            console.log("data", data)
+
+            if (res.ok) {
+
+                setUdpateSuccess("user updated successfully")
+
+                dispatch(updateSuccess(data.user))
+            }
+
+            else {
+                dispatch(updateFailure(data.message))
+            }
+
+        } catch (error) {
+            dispatch(updateFailure(error.message))
+        }
+
+    }
 
     const handleChange = (e) => {
 
@@ -42,6 +101,8 @@ const ProfileDashboard = () => {
     }
 
     useEffect(() => {
+        dispatch(updateFailure(null))
+
         if (imageFile) {
             uploadImage()
         }
@@ -91,6 +152,8 @@ const ProfileDashboard = () => {
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     setImageFileUrl(downloadURL);
+
+                    setFormData({ ...formData, googlePhotoUrl: downloadURL })
                 })
             }
 
@@ -102,7 +165,7 @@ const ProfileDashboard = () => {
         <div className='max-w-lg mx-auto p-3 w-full'>
             <h1 className='m-3 font-bold txt-media text-center'>Profile</h1>
 
-            <form className='flex flex-col gap-3'>
+            <form className='flex flex-col gap-3' onSubmit={handleSubmit}>
 
                 {/* input to upload img */}
                 <input type="file" accept='image/*' hidden onChange={handleChange} ref={imageRef} />
@@ -137,11 +200,11 @@ const ProfileDashboard = () => {
                         )
                     }
 
-                    <img src={imageFileUrl || currentUser.googlePhotoUrl} alt="user img" 
-                    className={`object-cover border-8 border-[lightgray] rounded-full h-full w-full 
-                    ${ imageFileProgress &&
-                        imageFileProgress < 100 &&
-                        'opacity-60'}`} />
+                    <img src={imageFileUrl || currentUser.googlePhotoUrl} alt="user img"
+                        className={`object-cover border-8 border-[lightgray] rounded-full h-full w-full 
+                    ${imageFileProgress &&
+                            imageFileProgress < 100 &&
+                            'opacity-60'}`} />
 
                     {/* if error happen while uploading  */}
 
@@ -152,14 +215,22 @@ const ProfileDashboard = () => {
 
                 {/* text inputs */}
 
-                <TextInput type='text' placeholder='username' id='username' defaultValue={currentUser.username} />
-                <TextInput type='text' placeholder='email' id='email' defaultValue={currentUser.email} />
-                <TextInput type='password' placeholder='password' id='password' />
+                <TextInput type='text' placeholder='username' id='username' defaultValue={currentUser.username} onChange={handleInputChange} />
+
+                <TextInput type='text' placeholder='email' id='email' defaultValue={currentUser.email} onChange={handleInputChange} />
+
+                <TextInput type='password' placeholder='password' id='password' onChange={handleInputChange} />
 
                 {/* update btn */}
 
                 <Button type='submit' className=' w-full' gradientDuoTone={"purpleToBlue"} outline>
-                    Update
+                    {
+                        loading ?
+                            <>
+                                <Spinner />
+                            </> :
+                            "update"
+                    }
                 </Button>
             </form>
 
@@ -171,6 +242,20 @@ const ProfileDashboard = () => {
                 <span className='cursor-pointer'>signOut</span>
 
             </div>
+
+            {/*  renedr Alerts for update  */}
+            
+            {
+                updateUserError && <Alert color="failure" className='my-3'>{updateUserError}</Alert>
+            }
+
+            {
+                error && <Alert color="failure" className='my-3'>{error}</Alert>
+            }
+
+            {
+                udpateSuccess && <Alert color="success" className='my-3'>{udpateSuccess}</Alert>
+            }
         </div>
     )
 }

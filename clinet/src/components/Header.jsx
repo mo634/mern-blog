@@ -15,8 +15,6 @@ const Header = () => {
     const { currentUser } = useSelector(state => state.user)
 
     const dispatch = useDispatch()
-
-    console.log(currentUser)
     return (
         <Navbar className='border-b-2'>
             {/* logo */}
