@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import dotenv from "dotenv"
 import userRouter from "./routes/user.route.js"
 import authRouter from "./routes/auth.route.js"
+import cookieParser from 'cookie-parser'
 dotenv.config()
 
 const app = express()
@@ -15,6 +16,7 @@ mongoose.connect(process.env.MONGO_URI)
 // use   middleware
 app.use(express.json())
 
+app.use(cookieParser())
 
 // run server 
 app.listen(4000, () => {
@@ -25,6 +27,7 @@ app.listen(4000, () => {
 // routes
 app.use("/api/auth", authRouter)
 
+app.use("/api/user", userRouter)
 
 // middleware "custom func for handle the errors"
 
