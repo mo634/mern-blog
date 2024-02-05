@@ -1,75 +1,82 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    currentUser:null,
-    loading:false,
-    error:null
+    currentUser: null,
+    loading: false,
+    error: null
 }
 
 
 const userSlice = createSlice({
-    
+
     name: 'user',
-    
+
     initialState,
-    
+
     reducers: {
-        signInStart:(state)=>{
+        signInStart: (state) => {
             state.loading = true
-            state.error=null
+            state.error = null
         }
         ,
 
-        signInSuccess:(state,action)=>{
+        signInSuccess: (state, action) => {
             state.loading = false
-            state.currentUser=action.payload
-            state.error=null
+            state.currentUser = action.payload
+            state.error = null
         }
         ,
 
-        signInFailure:(state,action)=>{
+        signInFailure: (state, action) => {
             state.loading = false
-            state.error=action.payload
+            state.error = action.payload
         }
 
         ,
 
-        updateStart:(state)=>{
+        updateStart: (state) => {
             state.loading = true
-            state.error=null
+            state.error = null
         },
 
-        updateSuccess:(state,action)=>{
+        updateSuccess: (state, action) => {
             state.loading = false
-            state.currentUser=action.payload
-            state.error=null
+            state.currentUser = action.payload
+            state.error = null
         }
         ,
-        updateFailure:(state,action)=>{
+        updateFailure: (state, action) => {
             state.loading = false
-            state.error=action.payload
+            state.error = action.payload
         },
 
-        deleteStart:(state)=>{
+        deleteStart: (state) => {
             state.loading = true
-            state.error=null
+            state.error = null
         },
 
-        deleteSuccess:(state)=>{
+        deleteSuccess: (state) => {
             state.loading = false
-            state.currentUser=null
-            state.error=null
+            state.currentUser = null
+            state.error = null
         }
 
-        ,deleteFaliure:(state,action)=>{
+        , deleteFaliure: (state, action) => {
             state.loading = false
-            state.error=action.payload
+            state.error = action.payload
+        },
+
+        signoutSuccess: (state) => {
+            state.currentUser = null
+            state.error = null
+            state.loading = false
         }
 
 
     },
 })
 
-export const {signInStart,signInSuccess,signInFailure,updateStart,updateSuccess,updateFailure,deleteStart,deleteSuccess,deleteFaliure} = userSlice.actions
+export const {
+    signoutSuccess, signInStart, signInSuccess, signInFailure, updateStart, updateSuccess, updateFailure, deleteStart, deleteSuccess, deleteFaliure } = userSlice.actions
 
 export default userSlice.reducer

@@ -11,7 +11,7 @@ import {
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { deleteFaliure, deleteStart, deleteSuccess, updateFailure, updateStart, updateSuccess } from '../redux/user/userSlice';
+import { deleteFaliure, deleteStart, deleteSuccess, signoutSuccess, updateFailure, updateStart, updateSuccess } from '../redux/user/userSlice';
 
 
 const ProfileDashboard = () => {
@@ -40,6 +40,25 @@ const ProfileDashboard = () => {
     const [showModel, setShowModal] = useState(false)
 
     // funcs
+
+    const handleSignout = async () => { 
+        
+        
+        try {
+            const res = await fetch("/api/user/signout",{
+                method:"POST"
+            })
+
+            const data = await res.json() 
+
+            if(res.ok){
+                dispatch(signoutSuccess())
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+
+    }
 
     const handleDeleteAccount = async() => {
         setShowModal(false)
@@ -268,7 +287,9 @@ const ProfileDashboard = () => {
                 >
                     Delete an account </span>
                 
-                <span className='cursor-pointer'>signOut</span>
+                <span className='cursor-pointer'
+                onClick={handleSignout}
+                >signOut</span>
 
             </div>
 

@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { togglemode } from '../redux/theme/themeSlice';
 import Logo from './Logo';
+import { signoutSuccess } from '../redux/user/userSlice';
 
 const Header = () => {
     //states 
@@ -15,6 +16,27 @@ const Header = () => {
     const { currentUser } = useSelector(state => state.user)
 
     const dispatch = useDispatch()
+
+    // funcs 
+    const handleSignout = async () => { 
+        
+        
+        try {
+            const res = await fetch("/api/user/signout",{
+                method:"POST"
+            })
+
+            const data = await res.json() 
+
+            if(res.ok){
+                dispatch(signoutSuccess())
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+
+    }
+
     return (
         <Navbar className='border-b-2'>
             {/* logo */}
@@ -72,7 +94,7 @@ const Header = () => {
                                     <DropdownItem>profile</DropdownItem>
                                     </Link>
 
-                                    <DropdownItem>Sign out</DropdownItem>
+                                    <DropdownItem  onClick={handleSignout}>Sign out</DropdownItem>
 
                                 </Dropdown.Header>
 
