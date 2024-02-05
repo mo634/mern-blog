@@ -1,4 +1,5 @@
-import { Alert, Button, Spinner, TextInput } from 'flowbite-react'
+import { Alert, Button, Modal, Spinner, TextInput } from 'flowbite-react'
+import {HiOutlineExclamationCircle } from 'react-icons/hi'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -10,7 +11,7 @@ import {
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { updateFailure, updateStart, updateSuccess } from '../redux/user/userSlice';
+import { deleteFaliure, deleteStart, deleteSuccess, updateFailure, updateStart, updateSuccess } from '../redux/user/userSlice';
 
 
 const ProfileDashboard = () => {
@@ -36,8 +37,31 @@ const ProfileDashboard = () => {
 
     const imageRef = useRef(null)
 
+    const [showModel, setShowModal] = useState(false)
+
     // funcs
 
+    const handleDeleteAccount = async() => {
+        setShowModal(false)
+        try {
+            dispatch(deleteStart())
+
+            const res = await fetch(`/api/user/user-delete/${currentUser._id}`, {
+                method: "DELETE",
+            })
+
+            const data = await res.json() 
+
+            if (res.ok) {
+                dispatch(deleteSuccess())
+            }
+            else{
+                dispatch(deleteFaliure(data.message))
+            }
+        } catch (error) {
+            dispatch(deleteFaliure(error.message))
+        }
+    }
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value })
     }
@@ -238,7 +262,12 @@ const ProfileDashboard = () => {
 
             <div className=" text-red-500 flex justify-between mt-3">
 
-                <span className='cursor-pointer'>Delete</span>
+                <span className='cursor-pointer'
+                onClick={() => setShowModal(true)}
+
+                >
+                    Delete an account </span>
+                
                 <span className='cursor-pointer'>signOut</span>
 
             </div>
@@ -256,6 +285,43 @@ const ProfileDashboard = () => {
             {
                 udpateSuccess && <Alert color="success" className='my-3'>{udpateSuccess}</Alert>
             }
+
+            {/* render popup for delete account  */}
+            <Modal
+            show={showModel}
+            onClose={() => setShowModal(false)}
+            size={"md"}
+            popup
+            >
+                
+                <Modal.Header/>
+                
+                <Modal.Body>
+                
+                <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
+                
+                <h3 className='font-bold text-center'>are you sure you want to delete your account</h3>
+
+                <div className=" flex justify-center gap-2 m-5">
+                    <Button
+                    color='failure'
+                    onClick={handleDeleteAccount}
+                    >
+                        yes , delete
+                    </Button>
+
+                    <Button
+                    color='gray'
+                    onClick={()=>setShowModal(false)}
+                    >
+
+                        no,cancel
+                    
+                    </Button>
+                </div>
+                </Modal.Body>
+            
+            </Modal>
         </div>
     )
 }
