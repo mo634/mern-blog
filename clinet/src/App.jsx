@@ -7,6 +7,8 @@ import About from "./pages/About"
 import Header from "./components/Header"
 import FooterComp from "./components/FooterComp"
 import PrivateRoute from "./components/PrivateRoute"
+import PrivateRouteAdmin from "./components/PrivateRouteAdmin"
+import CreatePost from "./pages/CreatePost"
 const App = () => {
   return (
     // config routes with react router
@@ -25,6 +27,11 @@ const App = () => {
     
     <Route element = {<PrivateRoute/>}>
       <Route path="/dashboard" element = {<Dashboard/>}/>
+    </Route>
+
+    {/* make create post page only for admin  */}
+    <Route element = {<PrivateRouteAdmin/>}>
+    <Route path="/create-post" element = {<CreatePost/>}/>
     </Route>
 
 

@@ -10,4 +10,6 @@ router.put("/user-update/:userId",verifyToken,updateUsre)
 
 router.delete("/user-delete/:userId",verifyToken,deleteUser)
 
+router.get("/signout",signout)
+
 export default router

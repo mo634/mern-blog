@@ -18,7 +18,7 @@ const SideBar = () => {
         
         try {
             const res = await fetch("/api/user/signout",{
-                method:"POST"
+                method:"GET"
             })
 
             const data = await res.json() 

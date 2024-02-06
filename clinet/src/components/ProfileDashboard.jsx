@@ -12,7 +12,7 @@ import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { deleteFaliure, deleteStart, deleteSuccess, signoutSuccess, updateFailure, updateStart, updateSuccess } from '../redux/user/userSlice';
-
+import {Link} from 'react-router-dom'
 
 const ProfileDashboard = () => {
     //states
@@ -27,6 +27,8 @@ const ProfileDashboard = () => {
 
     const [imageFileProgress, setImageFileProgress] = useState(null)
 
+    const [imageFileLoading, setImageFileLoading] = useState(null)
+    
     const [imageFileError, setImageFileError] = useState(null)
 
     const [formData, setFormData] = useState({})
@@ -46,7 +48,7 @@ const ProfileDashboard = () => {
         
         try {
             const res = await fetch("/api/user/signout",{
-                method:"POST"
+                method:"GET"
             })
 
             const data = await res.json() 
@@ -155,6 +157,8 @@ const ProfileDashboard = () => {
 
         setImageFileError(null)
 
+        setImageFileLoading(true)
+
         // start implement the firebase functionallity
 
         // get storage 
@@ -186,17 +190,20 @@ const ProfileDashboard = () => {
                 setImageFileProgress(null);
                 setImageFile(null);
                 setImageFileUrl(null);
+                setImageFileLoading(false)
             }
-
+            
             ,
-
+            
             // return final URL 
-
+            
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     setImageFileUrl(downloadURL);
 
                     setFormData({ ...formData, googlePhotoUrl: downloadURL })
+
+                    setImageFileLoading(false)
                 })
             }
 
@@ -266,7 +273,7 @@ const ProfileDashboard = () => {
 
                 {/* update btn */}
 
-                <Button type='submit' className=' w-full' gradientDuoTone={"purpleToBlue"} outline>
+                <Button disabled={loading || imageFileLoading} type='submit' className=' w-full' gradientDuoTone={"purpleToBlue"} outline>
                     {
                         loading ?
                             <>
@@ -275,6 +282,18 @@ const ProfileDashboard = () => {
                             "update"
                     }
                 </Button>
+
+                {/* create pos btn  */} 
+                {
+                    currentUser.isAdmin && (
+                    <Link to = {"/create-post"}>
+                    <Button 
+                    type='submit' className=' w-full' gradientDuoTone={"purpleToBlue"} outline>
+                        create post 
+                    </Button>
+                    </Link>
+                    )
+                }
             </form>
 
             {/* delete and sign out */}
