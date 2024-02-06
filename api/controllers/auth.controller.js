@@ -72,9 +72,10 @@ export const singIn = async (req, res, next) => {
         }
 
         //hash the tokent
-        const token = jwt.sign({ id: validUser._id }, process.env.SECRET_KEY);
+        const token = jwt.sign({ id: validUser._id,isAdmin:validUser.isAdmin }, process.env.SECRET_KEY);
 
         const { password: pass, ...rest } = validUser._doc;
+        
         // store credentials in cookie & sent response
         res
             .status(200)
@@ -100,6 +101,7 @@ export const google = async (req, res, next) => {
             const token = jwt.sign(
                 {
                     id: user._id,
+                    isAdmin: user.isAdmin
                 },
                 process.env.SECRET_KEY
             );
@@ -135,6 +137,7 @@ export const google = async (req, res, next) => {
             const token = jwt.sign(
                 {
                     id: newUser._id,
+                    isAdmin: newUser.isAdmin
                 }
             , process.env.SECRET_KEY)
 
