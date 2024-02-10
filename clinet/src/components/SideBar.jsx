@@ -1,12 +1,14 @@
 import { Sidebar } from 'flowbite-react'
 import { useEffect, useState } from 'react'
-import {HiArrowSmRight, HiUser } from 'react-icons/hi'
+import {HiArrowSmRight, HiDocumentText, HiUser } from 'react-icons/hi'
 import { Link, useLocation } from 'react-router-dom'
 import { signoutSuccess } from '../redux/user/userSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 const SideBar = () => {
     // states 
     const location = useLocation() 
+
+    const {currentUser} = useSelector((state)=>state.user)
 
     const dispatch = useDispatch()
 
@@ -43,7 +45,7 @@ const SideBar = () => {
 
     },[location.search])
 return (
-    <Sidebar className=' h-screen w-full md:w-[20%]' >
+    <Sidebar className=' h-auto md:h-screen w-full md:w-[20%]' >
         
         <Sidebar.Items>
 
@@ -62,7 +64,22 @@ return (
                     profile
                 </Sidebar.Item>
 
+                    {/* render posts item */}
                 </Link>
+
+                {currentUser.isAdmin &&(<Link to={"?tab=posts"}>
+                <Sidebar.Item 
+                label="profile"
+                icon={HiDocumentText}
+                active = {tab==="posts"} 
+                className='cursor-pointer'
+                as="div"
+                >
+                    posts
+                </Sidebar.Item>
+
+                </Link>)
+}
                 {/* render signOut item */}
 
                 <Sidebar.Item 

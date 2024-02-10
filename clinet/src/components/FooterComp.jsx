@@ -10,8 +10,8 @@ import Logo from "./Logo";
 
 const FooterComp = () => {
     return (
-        <Footer container>
-            <div className="w-full">
+        <Footer container className="border-t-2 border-teal-500">
+            <div className="w-full ">
                 <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
                     
                     <Logo/>

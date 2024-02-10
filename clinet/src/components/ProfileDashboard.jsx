@@ -289,7 +289,7 @@ const ProfileDashboard = () => {
                     <Link to = {"/create-post"}>
                     <Button 
                     type='submit' className=' w-full' gradientDuoTone={"purpleToBlue"} outline>
-                        create post 
+                        create post c
                     </Button>
                     </Link>
                     )
