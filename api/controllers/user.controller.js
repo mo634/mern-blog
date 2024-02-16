@@ -20,9 +20,9 @@ export const updateUsre = async (req, res, next) => {
 
         if (req.body.password) {
 
-            const hashedPassword =await validatePassword(req.body.password ,next)
+            const hashedPassword = await validatePassword(req.body.password, next)
 
-            if (!hashedPassword) return; 
+            if (!hashedPassword) return;
 
             req.body.password = hashedPassword;
 
@@ -31,7 +31,7 @@ export const updateUsre = async (req, res, next) => {
         if (req.body.username) {
             const username = validateUsername(req.body.username, next)
 
-            if(!username) return
+            if (!username) return
         }
 
         // update user
@@ -45,14 +45,14 @@ export const updateUsre = async (req, res, next) => {
                     password: req.body.password,
                 }
             },
-            {new:true}
+            { new: true }
         )
 
         const { password: pass, ...rest } = updateUser._doc
 
         console.log(updateUser)
 
-        res.status(200).json({ message: "user updated", user:rest })
+        res.status(200).json({ message: "user updated", user: rest })
     } catch (error) {
         next(errorHandler(error.statusCode, error.message))
     }
@@ -60,13 +60,13 @@ export const updateUsre = async (req, res, next) => {
 }
 
 
-export const deleteUser = async(req,res,next) => { 
+export const deleteUser = async (req, res, next) => {
     // delete logic
     try {
 
         //check the same ID ? 
-        if(req.params.userId !== req.user.id){
-            return next(errorHandler(401,"unauthorized user"))
+        if (req.params.userId !== req.user.id) {
+            return next(errorHandler(401, "unauthorized user"))
         }
 
         await User.findByIdAndDelete(req.user.id)
@@ -78,13 +78,64 @@ export const deleteUser = async(req,res,next) => {
     }
 }
 
-export const signout =(req,res,next) => { 
+export const signout = (req, res, next) => {
     try {
         res
-        .clearCookie('access_token')
-        .status(200)
-        .json('User has been signed out');
+            .clearCookie('access_token')
+            .status(200)
+            .json('User has been signed out');
     } catch (error) {
         next(errorHandler(error.statusCode, error.message))
+    }
+}
+
+export const getUsers = async (req, res, next) => {
+    // if(!req.body.isAdmin){
+    //     return next(errorHandler(401,"unauthorized user"))
+    // }
+
+    try {
+        const startIndex = req.query.startIndex || 0
+
+        const limit = req.query.limit || 9
+
+        const sort = req.query.sort === "asc" ? 1 : -1
+
+        const users = await User.find().sort({ createdAt: sort }).skip(startIndex).limit(limit)
+
+        const usersWithoutPassword = users.map((user) => {
+            const { password, ...rest } = user._doc
+
+            return rest
+        })
+
+
+        const totalUser = await User.countDocuments()
+
+        const now = new Date()
+
+        const onMonthAgo = new Date(
+
+            now.getFullYear(),
+            now.getMonth() - 1,
+            now.getDate()
+        )
+
+        const lastMonthUsers = await User.countDocuments({
+
+            createdAt:{$gte: onMonthAgo}
+        })
+
+
+        res.status(200).json({
+            users: usersWithoutPassword,
+            totalUser,
+            lastMonthUsers
+
+        })
+    }
+
+    catch (error) {
+        next(error)
     }
 }

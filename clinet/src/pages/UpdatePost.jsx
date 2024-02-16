@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -7,8 +7,11 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-const CreatePost = () => {
+import { useSelector } from 'react-redux';
+const UpdatePost = () => {
     //states 
+
+    const {currentUser}= useSelector(state=>state.user)
 
     const [imageFile, setImageFile] = useState(null)
 
@@ -25,6 +28,8 @@ const CreatePost = () => {
     const [puplishLoading, setPuplishLoading] = useState(null)
 
     const [puplishSuccess, setPuplishSuccess] = useState(null)
+
+    const {postId} = useParams()
 
     const navigate = useNavigate()
     // funcs 
@@ -92,8 +97,8 @@ const CreatePost = () => {
             setPuplishLoading(true)
             setPuplishSuccess(null)
 
-            const res = await fetch("/api/post/create-post", {
-                method: "POST",
+            const res = await fetch(`/api/post/update-post/${postId}/${currentUser._id}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -120,18 +125,49 @@ const CreatePost = () => {
 
 
     }
+
+    useEffect(()=>{
+        const fetchData = async ()=>{
+            setPublishError(null)
+            const res = await fetch(`/api/post/get-posts?postId=${postId}`,{
+                method:"POST"
+            })
+
+            const data = await res.json()
+
+            if(!res.ok){
+                
+                setPublishError(data.message)
+
+                return;
+
+            }
+
+            if(res.ok){
+                setFormData(data.posts[0])
+            }
+        }
+
+        fetchData()
+
+
+    },[postId])
     console.log(formData)
     return (
         <section
             className='min-h-screen max-w-3xl mx-auto my-10 p-[3%]' >
-            <h1 className='text-center my-5 font-bold txt-media'>Create Post</h1>
+            <h1 className='text-center my-5 font-bold txt-media'>update Post</h1>
 
             <form className='flex flex-col gap-4 ' onSubmit={handleSubmit}>
 
                 {/* first part  */}
                 <div className="flex flex-col md:flex-row gap-4">
-                    <TextInput className='flex-1' id="title" onChange={handleChange} />
-                    <Select id='category' onChange={handleChange}>
+                    <TextInput className='flex-1' id="title" 
+                    value={formData.title}
+                    onChange={handleChange} />
+                    <Select id='category' onChange={handleChange}
+                    value={formData.category}
+                    >
                         <option value={"javascript"}>javascript </option>
                         <option value={"next"}>next </option>
                         <option value={"python"}>Python </option>
@@ -190,6 +226,7 @@ const CreatePost = () => {
                 {/* quill part  */}
                 <ReactQuill
                     theme='snow'
+                    value={formData.content}
                     placeholder='Write something...'
                     className='h-72 mb-12'
                     required
@@ -208,7 +245,7 @@ const CreatePost = () => {
                     disabled={puplishLoading}
                 >
                     {
-                        puplishLoading ? "Publishing..." : "Publish"
+                        puplishLoading ? "update..." : "update"
                     }
                 </Button>
 
@@ -228,4 +265,4 @@ const CreatePost = () => {
     )
 }
 
-export default CreatePost
+export default UpdatePost

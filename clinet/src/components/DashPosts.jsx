@@ -80,7 +80,7 @@ const DashPosts = () => {
 
                             {/* render posts */}
 
-                            <PostLists postsInfo={postsInfo} postErr={postErr} />
+                            <PostLists postsInfo={postsInfo} setPostsInfo={setPostsInfo} postErr={postErr} />
 
                         </Table>
 
@@ -91,7 +91,7 @@ const DashPosts = () => {
                     )
             }
             {
-                showMore&&<button onClick={handleShowMore} className='btn btn-primary w-full mt-2'>Show More</button>
+                showMore && postsInfo?.posts.length >=9&&<button onClick={handleShowMore} className='btn btn-primary w-full mt-2'>Show More</button>
             }
         </div>
     )

@@ -1,6 +1,7 @@
 import {BrowserRouter ,Routes ,Route} from "react-router-dom"
 import Home from "./pages/Home"
 import Dashboard from "./pages/Dashbaoard"
+import UpdatePost from "./pages/UpdatePost"
 import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
 import About from "./pages/About"
@@ -32,6 +33,7 @@ const App = () => {
     {/* make create post page only for admin  */}
     <Route element = {<PrivateRouteAdmin/>}>
     <Route path="/create-post" element = {<CreatePost/>}/>
+    <Route path="/update-post/:postId" element = {<UpdatePost/>}/>
     </Route>
 
 
