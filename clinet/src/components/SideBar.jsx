@@ -1,31 +1,31 @@
 import { Sidebar } from 'flowbite-react'
 import { useEffect, useState } from 'react'
-import {HiArrowSmRight, HiDocumentText, HiUser } from 'react-icons/hi'
+import { HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiUser } from 'react-icons/hi'
 import { Link, useLocation } from 'react-router-dom'
 import { signoutSuccess } from '../redux/user/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
 const SideBar = () => {
     // states 
-    const location = useLocation() 
+    const location = useLocation()
 
-    const {currentUser} = useSelector((state)=>state.user)
+    const { currentUser } = useSelector((state) => state.user)
 
     const dispatch = useDispatch()
 
     const [tab, setTab] = useState("")
 
     // funcs
-    const handleSignout = async () => { 
-        
-        
+    const handleSignout = async () => {
+
+
         try {
-            const res = await fetch("/api/user/signout",{
-                method:"GET"
+            const res = await fetch("/api/user/signout", {
+                method: "GET"
             })
 
-            const data = await res.json() 
+            const data = await res.json()
 
-            if(res.ok){
+            if (res.ok) {
                 dispatch(signoutSuccess())
             }
         } catch (error) {
@@ -43,58 +43,78 @@ const SideBar = () => {
 
         setTab(tabParam)
 
-    },[location.search])
-return (
-    <Sidebar className=' h-auto md:h-screen w-full md:w-[20%]' >
-        
-        <Sidebar.Items>
+    }, [location.search])
+    return (
+        <Sidebar className=' h-auto md:h-screen w-full md:w-[20%]' >
 
-            <Sidebar.ItemGroup>
+            <Sidebar.Items>
 
-                {/* render profile item */}
+                <Sidebar.ItemGroup className='flex flex-col gap-2'>
 
-                <Link to={"?tab=profile"}>
-                <Sidebar.Item 
-                label="profile"
-                icon={HiUser}
-                active = {tab==="profile"} 
-                className='cursor-pointer'
-                as="div"
-                >
-                    profile
-                </Sidebar.Item>
+                    {/* render profile item */}
 
-                    {/* render posts item */}
-                </Link>
+                    <Link to={"?tab=profile"}>
+                        <Sidebar.Item
+                            label="profile"
+                            icon={HiUser}
+                            active={tab === "profile"}
+                            className='cursor-pointer'
+                            as="div"
+                        >
+                            profile
+                        </Sidebar.Item>
 
-                {currentUser.isAdmin &&(<Link to={"?tab=posts"}>
-                <Sidebar.Item 
-                label="profile"
-                icon={HiDocumentText}
-                active = {tab==="posts"} 
-                className='cursor-pointer'
-                as="div"
-                >
-                    posts
-                </Sidebar.Item>
+                        {/* render posts item */}
+                    </Link>
 
-                </Link>)
-}
-                {/* render signOut item */}
 
-                <Sidebar.Item 
-                icon={HiArrowSmRight}
-                className='cursor-pointer'
-                onClick={handleSignout}
-                >
-                    signout
-                </Sidebar.Item>
-            
-            </Sidebar.ItemGroup>
-        
-        </Sidebar.Items>
-    </Sidebar>
-)
+                    {/* only for admin  */}
+                    {
+                        currentUser.isAdmin && (<>
+                            {/* render posts item */}
+                            <Link to={"?tab=posts"}>
+                                <Sidebar.Item
+                                    icon={HiDocumentText}
+                                    active={tab === "posts"}
+                                    className='cursor-pointer'
+                                    as="div"
+                                >
+                                    posts
+                                </Sidebar.Item>
+
+                            </Link>
+                            {/* render users item */}
+                            <Link to={"?tab=users"}>
+                                <Sidebar.Item
+                                    icon={HiOutlineUserGroup}
+                                    active={tab === "users"}
+                                    className='cursor-pointer'
+                                    as="div"
+                                >
+                                    users
+                                </Sidebar.Item>
+
+                            </Link>
+
+                        </>)
+
+
+                    }
+                    {/* render signOut item */}
+
+                    <Sidebar.Item
+                        icon={HiArrowSmRight}
+                        className='cursor-pointer'
+                        onClick={handleSignout}
+                    >
+                        signout
+                    </Sidebar.Item>
+
+                </Sidebar.ItemGroup>
+
+            </Sidebar.Items>
+        </Sidebar>
+    )
 }
 
 export default SideBar

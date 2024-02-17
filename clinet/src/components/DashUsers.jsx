@@ -2,37 +2,38 @@ import { Table } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import PostLists from './PostLists'
+import UserList from './userList'
 
-const DashPosts = () => {
+const DashUsers = () => {
     //states 
     const { currentUser } = useSelector((state) => state.user)
 
-    const [postsInfo, setPostsInfo] = useState(null)
+    const [userInfo, setUserInfo] = useState(null)
 
-    const [postErr, setPostErr] = useState(null)
+    const [userErr, setUserErr] = useState(null)
 
     const [showMore, setShowMore] = useState(true)
 
     //funcs
     const fetchPosts = async () => {
         try {
-            setPostErr(null)
-            const res = await fetch(`/api/post/get-posts/?userId=${currentUser._id}`,
+            setUserErr(null)
+            const res = await fetch(`/api/user/get-users?limit=13`,
                 {
-                    method: "POST",
+                    method: "GET",
                 }
             )
 
             const data = await res.json()
 
             if (res.ok) {
-                setPostsInfo(data)
+                setUserInfo(data)
             }
 
 
 
         } catch (error) {
-            setPostErr(error.message)
+            setUserErr(error.message)
         }
 
     }
@@ -43,19 +44,19 @@ const DashPosts = () => {
     }, [currentUser._id])
 
     const handleShowMore = async () => {
-        const startIndex = postsInfo?.posts.length
+        const startIndex = userInfo?.users.length
 
-        const res = await fetch(`/api/post/get-posts?userId=${currentUser._id}&startIndex=${startIndex}`, {
-            method: "POST",
+        const res = await fetch(`/api/user/get-users?startIndex=${startIndex}`, {
+            method: "GET",
         })
 
         const data = await res.json()
 
-        setPostsInfo((prev) => ({
-            posts: [...prev.posts, ...data.posts]
+        setUserInfo((prev) => ({
+            users: [...prev.users, ...data.users]
         }))
 
-        if (data.posts.length < 9) {
+        if (data.users.length < 9) {
             setShowMore(false)
         }
 
@@ -65,22 +66,23 @@ const DashPosts = () => {
             {/* render posts */}
 
             {
-                currentUser.isAdmin && postsInfo?.posts.length > 0 ? (
+                currentUser.isAdmin && userInfo?.users.length > 0 ? (
                     <>
 
                         <Table hoverable className='shadow-md'>
                             {/* render head of table  */}
                             <Table.Head>
-                                <Table.HeadCell>Date updated</Table.HeadCell>
-                                <Table.HeadCell>Post image</Table.HeadCell>
-                                <Table.HeadCell>Post title</Table.HeadCell>
-                                <Table.HeadCell>Category</Table.HeadCell>
+                                <Table.HeadCell>Date created</Table.HeadCell>
+                                <Table.HeadCell>User image</Table.HeadCell>
+                                <Table.HeadCell>Username</Table.HeadCell>
+                                <Table.HeadCell>Email</Table.HeadCell>
+                                <Table.HeadCell>Admin</Table.HeadCell>
                                 <Table.HeadCell>Delete</Table.HeadCell>
                             </Table.Head >
 
                             {/* render posts */}
 
-                            <PostLists postsInfo={postsInfo} setPostsInfo={setPostsInfo} postErr={postErr} />
+                            <UserList userInfo={userInfo} setUserInfo={setUserInfo} userErr={userErr} />
 
                         </Table>
 
@@ -91,10 +93,10 @@ const DashPosts = () => {
                     )
             }
             {
-                showMore && postsInfo?.posts.length >= 9 && <button onClick={handleShowMore} className='btn btn-primary w-full mt-2'>Show More</button>
+                showMore && userInfo?.users.length >= 9 && <button onClick={handleShowMore} className='btn btn-primary w-full mt-2'>Show More</button>
             }
         </div>
     )
 }
 
-export default DashPosts
+export default DashUsers
