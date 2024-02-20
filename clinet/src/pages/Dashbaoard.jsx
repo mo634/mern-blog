@@ -15,9 +15,9 @@ const Dashbaoard = () => {
 
     const urlParams = new URLSearchParams(location.search)
 
-    const tabPramam = urlParams.get("tab")
+    const tabParam = urlParams.get("tab")
 
-    setTab(tabPramam)
+    setTab(tabParam)
 
 
   },[location.search])

@@ -3,7 +3,7 @@ import { Button, Modal, Table } from 'flowbite-react'
 import { Link } from 'react-router-dom'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { useSelector } from 'react-redux'
-import {FaCheck,FaTimes} from 'react-icons/fa'
+import { FaCheck, FaTimes } from 'react-icons/fa'
 const UserList = ({ userInfo, setUserInfo, userErr }) => {
     //states 
 
@@ -11,35 +11,35 @@ const UserList = ({ userInfo, setUserInfo, userErr }) => {
 
     const { currentUser } = useSelector((state) => state.user)
 
-    // const [deletePostId,setDeletePostId]= useState(null)
+    const [deleteUserId, setDeleteUserId] = useState(null)
 
     //funcs 
     const deletePost = async () => {
-        // setShowModal(false)
+        setShowModal(false)
 
-        // try {
-        //     const res = await fetch(`/api/post/delete-post/${deletePostId}/${currentUser._id}`, {
-        //         method: "DELETE"
-        //     })
+        try {
 
-
-        //     const data = await res.json()
-
-        //     if(!res.ok){
-        //         console.log(data.message)
-        //     }
-
-        //     set((prev)=>({
-        //         posts: prev.posts.filter((post)=> post._id !== deletePostId)
-        //     }))
+            const res = await fetch(`/api/user/user-delete/${deleteUserId}`, {
+                method: "DELETE"
+            })
 
 
-        // } catch (error) {
-        //     console.log(error)
-        // }
-        // console.log(deletePostId)
+            const data = await res.json()
+
+            if (!res.ok) {
+                console.log(data.message)
+            }
+
+            setUserInfo((prev) => ({
+                users: prev.users.filter((user) => user._id !== deleteUserId )
+            }))
+
+
+        } catch (error) {
+            console.log(error)
+        }
+
     }
-    console.log(userInfo)
     return (
         <>
             {
@@ -92,26 +92,12 @@ const UserList = ({ userInfo, setUserInfo, userErr }) => {
                                                         onClick={() => {
                                                             setShowModal(true)
 
-                                                            setDeletePostId(user._id)
+                                                            setDeleteUserId(user._id)
 
                                                         }}
                                                         className='font-medium text-red-500 hover:underline cursor-pointer'>
                                                         Delete
                                                     </span>
-                                                </Table.Cell>
-
-                                                {/* update cell  */}
-
-                                                <Table.Cell>
-                                                    <Link to={`/update-post/${user._id}`}
-                                                        className='font-medium text-blue-500 hover:underline cursor-pointer'
-                                                    >
-
-                                                        <span
-
-                                                        >Edit</span>
-
-                                                    </Link>
                                                 </Table.Cell>
                                             </Table.Row>
                                         </Table.Body>
@@ -125,7 +111,7 @@ const UserList = ({ userInfo, setUserInfo, userErr }) => {
 
 
                     :
-                    (<p>{postErr}</p>)
+                    (<p>{userErr}</p>)
 
             }
             <Modal

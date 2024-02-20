@@ -60,6 +60,7 @@ const DashPosts = () => {
         }
 
     }
+    console.log(postsInfo)
     return (
         <div className=' w-full table-auto overflow-x-scroll sm:overflow-x-hidden md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
             {/* render posts */}
@@ -76,6 +77,7 @@ const DashPosts = () => {
                                 <Table.HeadCell>Post title</Table.HeadCell>
                                 <Table.HeadCell>Category</Table.HeadCell>
                                 <Table.HeadCell>Delete</Table.HeadCell>
+                                <Table.HeadCell>Update</Table.HeadCell>
                             </Table.Head >
 
                             {/* render posts */}

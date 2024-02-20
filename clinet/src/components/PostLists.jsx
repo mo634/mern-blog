@@ -66,6 +66,11 @@ const PostLists = ({ postsInfo, postErr ,setPostsInfo}) => {
                                                     </Link>
                                                 </Table.Cell>
 
+                                                {/* title cell */}
+                                                <Table.Cell>
+                                                    {post.title}
+                                                </Table.Cell>
+
                                                 {/* category cell */}
                                                 <Table.Cell>
                                                     {post.category}

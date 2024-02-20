@@ -66,7 +66,7 @@ const DashUsers = () => {
             {/* render posts */}
 
             {
-                currentUser.isAdmin && userInfo?.users.length > 0 ? (
+                currentUser.isAdmin && userInfo?.users?.length > 0 ? (
                     <>
 
                         <Table hoverable className='shadow-md'>

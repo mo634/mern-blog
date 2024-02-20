@@ -61,13 +61,10 @@ export const updateUsre = async (req, res, next) => {
 
 
 export const deleteUser = async (req, res, next) => {
-    // delete logic
+    if (!req.user.isAdmin && req.params.userId !== req.user.id) {
+        return next(errorHandler(401, "unauthorized user"))
+    }
     try {
-
-        //check the same ID ? 
-        if (req.params.userId !== req.user.id) {
-            return next(errorHandler(401, "unauthorized user"))
-        }
 
         await User.findByIdAndDelete(req.user.id)
 

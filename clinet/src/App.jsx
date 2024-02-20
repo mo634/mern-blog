@@ -10,6 +10,7 @@ import FooterComp from "./components/FooterComp"
 import PrivateRoute from "./components/PrivateRoute"
 import PrivateRouteAdmin from "./components/PrivateRouteAdmin"
 import CreatePost from "./pages/CreatePost"
+import Post from "./pages/Post"
 const App = () => {
   return (
     // config routes with react router
@@ -37,6 +38,7 @@ const App = () => {
     </Route>
 
 
+    <Route path="/post/:slug" element = {<Post/>}/>
     <Route path="/sign-in" element = {<SignIn/>}/>
     <Route path="/sign-up" element = {<SignUp/>}/>
     <Route path="/about" element = {<About/>}/>
