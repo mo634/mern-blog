@@ -1,6 +1,8 @@
 import { Alert, Button, Spinner } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { ActionToCall } from '../components/ActionToCall'
+import CommentSection from '../components/CommentSection'
 
 const Post = () => {
     //states 
@@ -54,7 +56,7 @@ const Post = () => {
         )
     }
 
-    if (err) {
+    else if (err) {
         return (
             <div className='flex justify-center items-center min-h-screen'>
                 <Alert color="failure">{
@@ -63,37 +65,52 @@ const Post = () => {
             </div>
         )
     }
-    console.log(post)
-    return (
-        <main className='max-w-4xl mx-auto p-[3%] flex flex-col gap-5'>
-            {/* render title  */}
-            <h1 className='text-3xl font-bold text-center'>{post.title}</h1>
 
-            {/* render category btn  */}
 
-            <Button color='gray' pill size='xs' className='w-fit mx-auto'>{post.category}</Button>
+    else {
+        return (
+            <main className='max-w-4xl mx-auto p-[3%] flex flex-col gap-5'>
+                {/* render title  */}
+                <h1 className='text-3xl font-bold text-center'>{post?.title}</h1>
 
-            {/* render image  */}
+                {/* render category btn  */}
 
-            <img src={post.image} alt={post.title} className='w-full h-96 object-cover' />
+                <Button color='gray' pill size='xs' className='w-fit mx-auto'>{post?.category}</Button>
 
-            {/* render data created  */}
+                {/* render image  */}
 
-            <div className="flex justify-between">
-                <p className=''>{new Date(post.createdAt).toLocaleDateString()}</p>
+                <img src={post?.image} alt={post?.title} className='w-full h-96 object-cover' />
 
-                {/* render min to read */}
+                {/* render data created  */}
 
-                <p className=''>{(post.content.length / 1000).toFixed()} min to read</p>
+                <div className="flex justify-between">
+                    <p className=''>{new Date(post?.createdAt).toLocaleDateString()}</p>
 
-            </div>
+                    {/* render min to read */}
 
-            <hr />
-            {/* render content  */}
+                    <p className=''>{(post?.content.length / 1000).toFixed()} min to read</p>
 
-            <div className='p-3 max-w-2xl mx-auto w-full post-content' dangerouslySetInnerHTML={{ __html: post.content }}></div>
-        </main>
-    )
+                </div>
+
+                <hr />
+                {/* render content  */}
+
+                <div className='p-3 max-w-2xl mx-auto w-full post-content' dangerouslySetInnerHTML={{ __html: post?.content }}></div>
+
+                {/* render action to call component */}
+
+                <div className=" max-w-4xl mx-auto w-full">
+
+                    <ActionToCall />
+                </div>
+
+                {/* render comment section */}
+
+                <CommentSection postId={post?._id}/>
+                
+            </main>
+        )
+    }
 }
 
 export default Post
