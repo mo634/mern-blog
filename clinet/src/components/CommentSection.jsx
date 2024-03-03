@@ -1,8 +1,9 @@
-import { Alert, Button, TextInput, Textarea } from 'flowbite-react'
+import { Alert, Button, Modal, TextInput, Textarea } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Comments from './Comments'
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
 const CommentSection = ({ postId }) => {
     // states
     const currentUser = useSelector((state) => state.user.currentUser)
@@ -13,11 +14,33 @@ const CommentSection = ({ postId }) => {
 
     const [comments, setComments] = useState([])
 
+    const [showModal, setShowModal] = useState(false)
+
+    const [commentToDelete,setCommentToDelete] = useState(null)
+
 
     //funcs 
 
-    const updateComment =(comment,editedComment)=>{
-        setComments(comments.map((com)=>com._id === comment._id ? {...com, content: editedComment} : com))
+    const handleDelete = async()=>{
+        setShowModal(false)
+        try {
+            const res = await fetch(`/api/comment/comment-delete/${commentToDelete}`, {
+                method: "DELETE",
+            })
+
+            const data = await res.json()
+
+            if(res.ok)
+            {
+                setComments(comments.filter((com)=>com._id !== commentToDelete))
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    const updateComment = (comment, editedComment) => {
+        setComments(comments.map((com) => com._id === comment._id ? { ...com, content: editedComment } : com))
     }
     const isLike = async (id) => {
 
@@ -35,12 +58,12 @@ const CommentSection = ({ postId }) => {
                 // map on all comments 
                 //  if the comment user liked is the same in map update likes and numberOfLikes
                 setComments(
-                    comments.map((com)=>com._id === id ? {
+                    comments.map((com) => com._id === id ? {
                         ...com,
                         likes: data.likes,
                         numberOfLikes: data.likes.length
 
-                    }: com)
+                    } : com)
                 )
             }
 
@@ -99,7 +122,7 @@ const CommentSection = ({ postId }) => {
         fetchComment()
     }, [postId])
 
-console.log(comments)
+
     return (
         <div className=' max-w-xl mx-auto w-full'>
 
@@ -158,7 +181,12 @@ console.log(comments)
 
                         {
                             comments.map((comment) => (
-                                <Comments key={comment._id} comment={comment} isLike={isLike} updateComment={updateComment}/>
+                                <Comments 
+                                onDelete={(commentId) =>{
+                                    setCommentToDelete(commentId)
+                                    setShowModal(true)
+                                }}
+                                key={comment._id} comment={comment} isLike={isLike} updateComment={updateComment} />
                             ))
                         }
 
@@ -167,6 +195,35 @@ console.log(comments)
 
                 )
             }
+
+            <Modal
+                show={showModal}
+                onClose={() => setShowModal(false)}
+                popup
+                size='md'
+            >
+                <Modal.Header />
+                <Modal.Body>
+                    <div className='text-center'>
+                        <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
+                        <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
+                            Are you sure you want to delete this comment?
+                        </h3>
+                        <div className='flex justify-center gap-4'>
+                            <Button
+                                color='failure'
+                                onClick={() => handleDelete(commentToDelete)}
+                            >
+                                Yes, I'm sure
+                            </Button>
+                            <Button color='gray' 
+                            onClick={() => setShowModal(false)}>
+                                No, cancel
+                            </Button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </div>
     )
 }

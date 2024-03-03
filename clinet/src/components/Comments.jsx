@@ -3,13 +3,14 @@ import moment from 'moment'
 import { FaThumbsUp } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { Button, Textarea } from 'flowbite-react';
-function Comments({ comment, isLike ,updateComment}) {
+function Comments({ comment, isLike, updateComment,onDelete }) {
 
     //states
     const { currentUser } = useSelector((state) => state.user)
     const [user, setUser] = useState(null)
     const [isEdit, setIsEdit] = useState(false)
     const [editedComment, setEditedComment] = useState(comment.content)
+
 
 
     //funcs 
@@ -54,7 +55,7 @@ function Comments({ comment, isLike ,updateComment}) {
 
                 if (res.ok) {
                     setUser(data)
-                    console.log(data)
+
                 }
             } catch (error) {
                 console.log(error)
@@ -132,9 +133,25 @@ function Comments({ comment, isLike ,updateComment}) {
 
                                     &&
 
-                                    (<button
-                                        onClick={handleEditComment}
-                                    >Edit</button>)}
+                                    (
+                                        <>
+                                            <button
+                                                onClick={handleEditComment}
+                                                className=' hover:text-[#0097ff] duration-500 text-gray-400'
+                                            >Edit</button>
+
+                                            <button
+                                                className=' hover:text-[#0097ff] duration-500 text-gray-400'
+                                            onClick={() => onDelete(comment._id)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </>
+
+                                    )
+
+
+                                }
                             </div>
 
                         </div>
