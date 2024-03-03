@@ -28,7 +28,6 @@ const Post = () => {
 
             const data = await res.json()
 
-            console.log(data.posts[0])
 
             if (res.ok) {
                 setPost(data.posts[0])
