@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ActionToCall } from '../components/ActionToCall'
 import CommentSection from '../components/CommentSection'
+import RecentPosts from '../components/RecentPosts'
 
 const Post = () => {
     //states 
@@ -13,6 +14,8 @@ const Post = () => {
     const [err, setErr] = useState(null)
 
     const [loading, setLoading] = useState(false)
+
+    const [posts, setPosts] = useState([])
 
 
     //funcs
@@ -46,7 +49,30 @@ const Post = () => {
         fetchPost()
     }, [slug])
 
+    useEffect(() => {
+        const getPosts = async () => {
+            try {
+                const res = await fetch(`/api/post/get-posts?limit=3`, {
+                    method: "POST"
+                })
 
+                const data = await res.json()
+
+                if (res.ok) {
+                    setPosts(data.posts)
+                }
+
+            } catch (error) {
+                console.log(error.message)
+            }
+
+
+        }
+
+        getPosts()
+    }, [])
+
+    console.log(posts)
     if (loading) {
         return (
             <div className='flex justify-center items-center min-h-screen'>
@@ -68,7 +94,7 @@ const Post = () => {
 
     else {
         return (
-            <main className='max-w-4xl mx-auto p-[3%] flex flex-col gap-5'>
+            <main className='max-w-6xl mx-auto p-[3%] flex flex-col gap-5'>
                 {/* render title  */}
                 <h1 className='text-3xl font-bold text-center'>{post?.title}</h1>
 
@@ -105,8 +131,16 @@ const Post = () => {
 
                 {/* render comment section */}
 
-                <CommentSection postId={post?._id}/>
-                
+                <CommentSection postId={post?._id} />
+                {/* render other posts */}
+                <div className="w-full flex flex-col justify-center items-center  ">
+                    <h1 className='text-3xl text-center my-5'>recent posts</h1>
+                    <div className="flex flex-wrap  gap-5 justify-center" >
+                        {
+                            posts && posts.map(post => <RecentPosts key={post._id} post={post} />)
+                        }
+                    </div>
+                </div>
             </main>
         )
     }

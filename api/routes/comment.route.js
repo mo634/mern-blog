@@ -1,12 +1,14 @@
 import express from "express"
 import { verifyToken } from "../utlis/verifyUser.js"
-import { addComment, commnetDelete, commnetEdit, commnetLike, getComment } from "../controllers/comment.controller.js"
+import { addComment, commnetDelete, commnetEdit, commnetLike, getComment, getComments } from "../controllers/comment.controller.js"
 
 const router = express.Router()
 
 router.post("/add-comment",verifyToken,addComment)
 
 router.get("/get-comment/:postId",getComment)
+
+router.get("/get-comments",verifyToken,getComments)
 
 router.put("/comment-like/:commentId",verifyToken,commnetLike)
 

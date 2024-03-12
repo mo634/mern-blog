@@ -15,10 +15,12 @@ const SignIn = () => {
   const dispatch = useDispatch()
 
   const {loading,error,currentUser} = useSelector(state=>state.user)
+  console.log(loading)
 
   //functions
 
   const handleSubmit =async (e) => {
+    console.log("first")
 
     e.preventDefault() 
 

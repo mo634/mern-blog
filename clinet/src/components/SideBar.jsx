@@ -1,9 +1,10 @@
 import { Sidebar } from 'flowbite-react'
 import { useEffect, useState } from 'react'
-import { HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiUser } from 'react-icons/hi'
+import { HiAnnotation, HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiUser } from 'react-icons/hi'
 import { Link, useLocation } from 'react-router-dom'
 import { signoutSuccess } from '../redux/user/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { HiChartPie } from 'react-icons/hi'
 const SideBar = () => {
     // states 
     const location = useLocation()
@@ -70,33 +71,63 @@ const SideBar = () => {
 
                     {/* only for admin  */}
                     {
-                        currentUser.isAdmin && (<>
-                            {/* render posts item */}
-                            <Link to={"?tab=posts"}>
-                                <Sidebar.Item
-                                    icon={HiDocumentText}
-                                    active={tab === "posts"}
-                                    className='cursor-pointer'
-                                    as="div"
-                                >
-                                    posts
-                                </Sidebar.Item>
+                        currentUser.isAdmin && (
+                            <>
+                                {/* render posts item */}
+                                <Link to={"?tab=posts"}>
+                                    <Sidebar.Item
+                                        icon={HiDocumentText}
+                                        active={tab === "posts"}
+                                        className='cursor-pointer'
+                                        as="div"
+                                    >
 
-                            </Link>
-                            {/* render users item */}
-                            <Link to={"?tab=users"}>
-                                <Sidebar.Item
-                                    icon={HiOutlineUserGroup}
-                                    active={tab === "users"}
-                                    className='cursor-pointer'
-                                    as="div"
-                                >
-                                    users
-                                </Sidebar.Item>
+                                        posts
+                                    </Sidebar.Item>
 
-                            </Link>
+                                </Link>
+                                {/* render users item */}
+                                <Link to={"?tab=users"}>
+                                    <Sidebar.Item
+                                        icon={HiOutlineUserGroup}
+                                        active={tab === "users"}
+                                        className='cursor-pointer'
+                                        as="div"
+                                    >
+                                        users
+                                    </Sidebar.Item>
 
-                        </>)
+                                </Link>
+
+                                {/* render comments item */}
+                                <Link to={"?tab=comments"}>
+                                    <Sidebar.Item
+                                        icon={HiAnnotation}
+                                        active={tab === "comments"}
+                                        className='cursor-pointer'
+                                        as="div"
+                                    >
+
+                                        comments
+                                    </Sidebar.Item>
+
+                                </Link>
+                                {/* render dash item */}
+                                <Link to={"?tab=dash"}>
+                                    <Sidebar.Item
+                                        icon={HiChartPie}
+
+                                        active={tab === "dash"}
+                                        className='cursor-pointer'
+                                        as="div"
+                                    >
+
+                                        Dashboard
+                                    </Sidebar.Item>
+
+                                </Link>
+
+                            </>)
 
 
                     }
