@@ -2,7 +2,7 @@ import { Table } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import PostLists from './PostLists'
-import UserList from './userList'
+import UserList from './UserList'
 
 const DashUsers = () => {
     //states 
