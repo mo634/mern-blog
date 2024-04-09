@@ -7,7 +7,7 @@ export const ActionToCall = () => {
         flex-col gap-4 sm:flex-row sm:gap-2
         '>
             
-            <div className="flex-1 flex flex-col gap-3 text-center">
+            <div className="flex-1 flex flex-col gap-3 text-center justify-center">
 
             <h1 className='text-xl'>Want to learn HTML, CSS and JavaScript by building fun and engaging projects?</h1>
             <p className='text-gray-500 '>Check our 100 js prjects website and start building your own projects</p>

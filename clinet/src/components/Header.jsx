@@ -1,11 +1,13 @@
 import { Avatar, Button, Dropdown, DropdownItem, Navbar, NavbarToggle, TextInput } from 'flowbite-react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon,FaSun } from 'react-icons/fa';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { togglemode } from '../redux/theme/themeSlice';
 import Logo from './Logo';
 import { signoutSuccess } from '../redux/user/userSlice';
+import { useEffect, useState } from 'react';
+
 
 const Header = () => {
     //states 
@@ -15,9 +17,31 @@ const Header = () => {
 
     const { currentUser } = useSelector(state => state.user)
 
+    const [searchTerm,setSearchTerm] = useState(null)
+
+    const location = useLocation()
+
+    const navigate = useNavigate()
+
+
+
     const dispatch = useDispatch()
 
     // funcs 
+
+    const handleSubmit = (e) =>{
+        e.preventDefault() 
+
+        const urlParams = new URLSearchParams(location.search)
+
+        urlParams.set("searchTerm",searchTerm)
+
+        const searchQuery  = urlParams.toString() 
+
+        navigate(`/search?${searchQuery}`)
+
+
+    }
     const handleSignout = async () => { 
         
         
@@ -37,6 +61,19 @@ const Header = () => {
 
     }
 
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search)
+
+        const searchTermFromUrl = urlParams.get("searchTerm")
+
+        if(searchTermFromUrl){
+            setSearchTerm(searchTermFromUrl)
+        }
+    },[location.search])
+
+    
+    console.log(searchTerm)
     return (
         <Navbar className='border-b-2'>
             {/* logo */}
@@ -47,11 +84,15 @@ const Header = () => {
 
             {/* lg media */}
 
-            <form className="relative hidden md:inline">
+            <form 
+            onSubmit={handleSubmit}
+            className="relative hidden md:inline">
                 <TextInput
                     type="text"
                     placeholder="Search..."
                     className=''
+                    defaultValue={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <AiOutlineSearch className="absolute top-0 bottom-0 right-3 my-auto" />
             </form>

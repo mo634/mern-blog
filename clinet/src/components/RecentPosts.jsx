@@ -15,7 +15,8 @@ const RecentPosts = ({ post }) => {
                 <p className='line-clamp-3'>{post.title}</p>
                 <p>{post.category}</p>
                 <Link to={`/post/${post.slug}`}
-                className=' left-2 right-2 absolute border border-teal-500  hover:bg-teal-500 bottom-[-40px] group-hover:bottom-2 transition-all duration-500 text-center text-white font-bold py-2'
+                className=' left-2 right-2 absolute border border-teal-500 
+                group-hover:text-teal-500  hover:bg-teal-500 hover:!text-white bottom-[-40px] group-hover:bottom-2 transition-all duration-500 text-center text-white font-bold py-2'
                 >
                 read article
                 </Link>
