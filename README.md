@@ -2,8 +2,7 @@
 # MERN Blog with Admin Dashboard
 
 ## Overview
-This project is a comprehensive blogging platform built using the MERN stack. It features a user-friendly interface for readers and a powerful admin dashboard for blog management.
-
+This project is a full-featured blogging platform that employs the MERN stack to provide robust user authentication and dynamic content management. It integrates advanced features such as Google authentication, Redux for state management, and Firebase for storage solutions, catering to both administrative and user-specific needs.
 ## Technologies Used
 - **MongoDB**: For database management.
 - **Express.js**: Backend framework.
